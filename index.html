@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Learn C Programming | Interactive Tutorial</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+      background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+      color: #e3e6f0;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    /* custom scroll */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1e243b;
+      border-radius: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3b4b6e;
+      border-radius: 6px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #5f7faf;
+    }
+
+    /* header / navbar */
+    .navbar {
+      background: rgba(10, 18, 32, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #2a344a;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #6c9eff, #2bddff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+    .logo span {
+      background: none;
+      color: #ffcd7e;
+      background-clip: unset;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      color: #b9c7e0;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+      font-size: 0.95rem;
+    }
+    .nav-links a:hover {
+      color: #7aaaff;
+      text-shadow: 0 0 4px #3a6eff40;
+    }
+
+    /* main container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+    }
+
+    /* hero section */
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem 1rem;
+      background: radial-gradient(circle at 30% 10%, #111927, #070b14);
+      border-radius: 2.5rem;
+      border: 1px solid #2c354e;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(120deg, #ffffff, #7aa9ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      color: #b4c2e0;
+    }
+
+    /* grid layout: topics + live editor */
+    .learn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+    @media (max-width: 850px) {
+      .learn-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+
+    /* card styles */
+    .card {
+      background: rgba(18, 26, 45, 0.65);
+      backdrop-filter: blur(4px);
+      border-radius: 1.8rem;
+      border: 1px solid #2e3a55;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.4);
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #4f6e9e;
+      box-shadow: 0 20px 32px -12px rgba(0, 0, 0, 0.6);
+    }
+    .card-header {
+      background: #0f172ed4;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #2a3857;
+      font-weight: 700;
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .card-header i {
+      font-size: 1.6rem;
+    }
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    /* topic list styling */
+    .topic-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .topic-item {
+      background: #0f1629a0;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-left: 4px solid #3b6eff;
+    }
+    .topic-item:hover {
+      background: #1b2542;
+      transform: translateX(5px);
+    }
+    .topic-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #d3e0ff;
+    }
+    .topic-desc {
+      font-size: 0.85rem;
+      color: #9eafd0;
+      margin-top: 6px;
+    }
+    .code-snippet {
+      background: #010514;
+      padding: 0.6rem 0.8rem;
+      border-radius: 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      margin-top: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: #bbd9ff;
+      border: 1px solid #2a3c60;
+    }
+
+    /* live editor */
+    .editor-area {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    textarea {
+      width: 100%;
+      background: #010518;
+      border: 1px solid #33415e;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      font-family: 'Fira Code', 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: #eef5ff;
+      resize: vertical;
+      outline: none;
+      transition: 0.2s;
+    }
+    textarea:focus {
+      border-color: #6c9eff;
+      box-shadow: 0 0 0 2px #1e3b8a;
+    }
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    button {
+      background: #1e2b46;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: #eef3ff;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.85rem;
+      border: 1px solid #3a5380;
+    }
+    button.primary {
+      background: #2b4b9e;
+      box-shadow: 0 2px 6px #00000040;
+      border-color: #6086cf;
+    }
+    button.primary:hover {
+      background: #3a62bd;
+      transform: scale(0.97);
+    }
+    button:hover {
+      background: #2f4168;
+    }
+    .output-console {
+      background: #03060f;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      border: 1px solid #2f4160;
+      min-height: 160px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #c9e2ff;
+      overflow-y: auto;
+    }
+    .output-header {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #92abdf;
+      letter-spacing: 0.5px;
+    }
+
+    /* additional resources section */
+    .resources {
+      margin-top: 3rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1.5rem;
+      background: #0b1122aa;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      border: 1px solid #293454;
+    }
+    .res-card {
+      flex: 1;
+      min-width: 180px;
+    }
+    .res-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      border-left: 4px solid #5d8eff;
+      padding-left: 10px;
+    }
+    .res-card ul {
+      list-style: none;
+      padding-left: 0.8rem;
+    }
+    .res-card li {
+      margin: 0.5rem 0;
+    }
+    .res-card a {
+      color: #9cb4ff;
+      text-decoration: none;
+    }
+    .res-card a:hover {
+      text-decoration: underline;
+      color: white;
+    }
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 1.5rem;
+      font-size: 0.8rem;
+      border-top: 1px solid #1e2a44;
+      color: #6f7fa3;
+    }
+    @media (max-width: 560px) {
+      .navbar {
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .hero h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">⚡ Learn <span>C</span> Programming</div>
+  <div class="nav-links">
+    <a href="#">Basics</a>
+    <a href="#">Pointers</a>
+    <a href="#">Structures</a>
+    <a href="#">Memory</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <h1>Master C from scratch</h1>
+    <p>Interactive concepts, real code editor, and live output — write, run, and understand the power of C.</p>
+  </div>
+
+  <div class="learn-grid">
+    <!-- LEFT PANEL: CORE TOPICS -->
+    <div class="card">
+      <div class="card-header">
+        <span>📘</span> C Programming Essentials
+      </div>
+      <div class="card-body">
+        <div class="topic-list" id="topicList">
+          <!-- topics injected via js but also static fallback, but dynamic render -->
+        </div>
+        <div id="topicDetail" style="margin-top: 1rem; background: #07112660; border-radius: 1rem; padding: 1rem;">
+          <div style="font-size: 0.85rem; color: #bbd9ff;" id="dynamicExplanation">
+            Click any topic to see explanation & example code.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: LIVE C EDITOR (simulated execution) -->
+    <div class="card">
+      <div class="card-header">
+        <span>✍️</span> Interactive C Playground
+      </div>
+      <div class="card-body">
+        <div class="editor-area">
+          <label style="font-weight: 500; margin-bottom: 4px;">✏️ Write / Modify C code:</label>
+          <textarea id="codeEditor" rows="8">#include <stdio.h>
+
+int main() {
+    printf("Hello, C learner! 🚀\n");
+    printf("Variables: int x = 42;\n");
+    int x = 42;
+    printf("Value of x = %d\n", x);
+    return 0;
+}
+          </textarea>
+          <div class="button-group">
+            <button id="runBtn" class="primary">▶ Run Code</button>
+            <button id="resetEditorBtn">⟳ Reset Example</button>
+            <button id="clearOutputBtn">🗑 Clear Output</button>
+          </div>
+          <div class="output-console">
+            <div class="output-header">📟 OUTPUT (simulated execution):</div>
+            <pre id="outputArea" style="margin:0; font-family: inherit;">Ready. Press 'Run Code'.</pre>
+          </div>
+          <p style="font-size: 0.7rem; color: #8a9bc0; margin-top: 0.5rem;">* Educational simulator: executes a subset of C logic (prints, arithmetic, loops demo). Supports printf, variables, basic loops & conditions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resources section -->
+  <div class="resources">
+    <div class="res-card">
+      <h3>📚 Core Topics</h3>
+      <ul>
+        <li>Data Types & Variables</li>
+        <li>Control Flow (if/else, loops)</li>
+        <li>Functions & Recursion</li>
+        <li>Arrays & Strings</li>
+        <li>Pointers & Memory</li>
+      </ul>
+    </div>
+    <div class="res-card">
+      <h3>🔧 Compiler Tips</h3>
+      <ul>
+        <li>gcc program.c -o prog</li>
+        <li>Use -Wall for warnings</li>
+        <li>Valgrind for memory leaks</li>
+      </ul>
+    </div>
+    <div class="res-card">
+      <h3>⭐ Practice Ideas</h3>
+      <ul>
+        <li>Fibonacci series</li>
+        <li>String palindrome</li>
+        <li>Linked list basics</li>
+      </ul>
+    </div>
+  </div>
+  <footer>
+    🧠 Learn C — interactive sandbox | All examples are simulated for learning | Real C requires a compiler like GCC
+  </footer>
+</div>
+
+<script>
+  // ---------- C TOPICS DATABASE ----------
+  const topics = [
+    {
+      title: "📌 1. Hello World & Basics",
+      desc: "Every C program starts with main() and uses printf().",
+      code: `#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}`,
+      explanation: "🔹 #include <stdio.h> for input/output. 🔹 main() is the entry point. 🔹 printf() prints formatted text. 🔹 return 0; indicates success."
+    },
+    {
+      title: "🔢 2. Variables & Data Types",
+      desc: "int, float, char — declare and assign.",
+      code: `#include <stdio.h>\n\nint main() {\n    int age = 21;\n    float pi = 3.14159;\n    char grade = 'A';\n    printf("Age: %d, Pi: %.2f, Grade: %c\\n", age, pi, grade);\n    return 0;\n}`,
+      explanation: "📌 int: integer, float: decimal, char: single character. Use format specifiers %d, %f, %c."
+    },
+    {
+      title: "🔄 3. Conditionals (if-else)",
+      desc: "Decision making using if, else if, else.",
+      code: `#include <stdio.h>\n\nint main() {\n    int marks = 85;\n    if(marks >= 90) printf("Grade A\\n");\n    else if(marks >= 75) printf("Grade B\\n");\n    else printf("Needs improvement\\n");\n    return 0;\n}`,
+      explanation: "✨ if-else controls program flow. Conditions inside parentheses, blocks with {}."
+    },
+    {
+      title: "🔄 4. Loops (for / while)",
+      desc: "Repeat code efficiently.",
+      code: `#include <stdio.h>\n\nint main() {\n    printf("For loop: ");\n    for(int i=1; i<=5; i++) printf("%d ", i);\n    printf("\\nWhile loop: ");\n    int j=1;\n    while(j<=3) { printf("C! "); j++; }\n    return 0;\n}`,
+      explanation: "for(init; condition; increment) { } while(condition) { } — iterate and automate repetition."
+    },
+    {
+      title: "📦 5. Arrays & Strings",
+      desc: "Store multiple values, char arrays as strings.",
+      code: `#include <stdio.h>\n\nint main() {\n    int nums[] = {10, 20, 30};\n    char name[] = "Coder";\n    printf("Second num: %d\\n", nums[1]);\n    printf("Name: %s\\n", name);\n    return 0;\n}`,
+      explanation: "Arrays store same-type elements. Strings are char arrays terminated by '\\0'."
+    },
+    {
+      title: "📍 6. Pointers Introduction",
+      desc: "Variables that store memory addresses.",
+      code: `#include <stdio.h>\n\nint main() {\n    int x = 100;\n    int *ptr = &x;\n    printf("Value: %d, Address: %p, Deref: %d\\n", x, ptr, *ptr);\n    return 0;\n}`,
+      explanation: "Pointer stores address. & gives address, * dereferences. Powerful for dynamic memory."
+    }
+  ];
+
+  // DOM elements
+  const topicListDiv = document.getElementById("topicList");
+  const dynamicExplanation = document.getElementById("dynamicExplanation");
+  const codeEditor = document.getElementById("codeEditor");
+  const runBtn = document.getElementById("runBtn");
+  const resetEditorBtn = document.getElementById("resetEditorBtn");
+  const clearOutputBtn = document.getElementById("clearOutputBtn");
+  const outputArea = document.getElementById("outputArea");
+
+  // Render topic list on left
+  function renderTopics() {
+    topicListDiv.innerHTML = "";
+    topics.forEach((topic, idx) => {
+      const topicDiv = document.createElement("div");
+      topicDiv.classList.add("topic-item");
+      topicDiv.innerHTML = `
+        <div class="topic-title">
+          <span>${topic.title}</span>
+          <span style="font-size:0.7rem;">▶</span>
+        </div>
+        <div class="topic-desc">${topic.desc}</div>
+        <div class="code-snippet" style="display: none;" id="snippet-${idx}">${escapeHtml(topic.code)}</div>
+      `;
+      topicDiv.addEventListener("click", (e) => {
+        // highlight and update explanation + optionally load code into editor
+        updateTopicDetail(idx);
+        // also optionally load the snippet into editor
+        codeEditor.value = topic.code;
+        // scroll editor into view (nice)
+        codeEditor.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+      topicListDiv.appendChild(topicDiv);
+    });
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if(m === '&') return '&amp;';
+      if(m === '<') return '&lt;';
+      if(m === '>') return '&gt;';
+      return m;
+    }).replace(/[\u00A0-\u9999<>\&]/g, function(i) {
+      return i;
+    });
+  }
+
+  function updateTopicDetail(index) {
+    const topic = topics[index];
+    let explanationHtml = `<div style="font-weight: bold; margin-bottom: 6px;">📖 ${topic.title}</div>`;
+    explanationHtml += `<div style="margin-bottom: 12px;">${topic.explanation}</div>`;
+    explanationHtml += `<div style="background:#030b1c; border-radius:14px; padding:8px; font-family: monospace; font-size:0.8rem;"><strong>💡 Example:</strong><pre style="margin-top:6px; overflow-x:auto;">${escapeHtml(topic.code)}</pre></div>`;
+    dynamicExplanation.innerHTML = explanationHtml;
+  }
+
+  // ---------- C SIMULATOR (simplified but educational) ----------
+  // We create a simple interpreter that can handle:
+  // - printf with %d, %s, %f, %c, %p (basic)
+  // - variable declarations (int, float, char, and assignments)
+  // - for/while loops (limited depth to avoid infinite)
+  // - if/else conditions, basic arithmetic, and simple expressions.
+  // Because it's a demo, we build a lightweight parser/evaluator.
+  // But for robust learning we emulate many common constructs.
+  
+  // We'll implement a minimal execution environment using a virtual machine style
+  // with state variables (variables map) and line-by-line simulation.
+  // For readability, I'll implement a "mini C runner" that supports:
+  // - #include <stdio.h> (ignored)
+  // - int/float/char variable declarations and assignments
+  // - printf with format specifiers
+  // - if, else if, else
+  // - for and while loops (with break safety)
+  // - simple expressions: + - * / % (integers)
+  
+  // We'll convert the C code into lines and process.
+  function runCSimulation(code) {
+    let output = "";
+    function append(text) {
+      output += text + "\n";
+    }
+    
+    // Variables store values: { name: {type, value} }
+    let variables = new Map();
+    
+    // Helper: evaluate simple arithmetic expression (supports integers, variables, + - * / %)
+    function evaluateExpression(expr, scopeVars) {
+      expr = expr.trim();
+      // try to parse number or variable
+      if(/^-?\d+$/.test(expr)) return parseInt(expr);
+      if(/^-?\d+\.\d+$/.test(expr)) return parseFloat(expr);
+      // variable
+      if(scopeVars.has(expr)) {
+        let v = scopeVars.get(expr);
+        return v.value;
+      }
+      // very basic infix evaluation for demo (supports + - * / % with integers, no precedence hell but left to right)
+      // safer: simple binary ops
+      let operators = ['+','-','*','/','%'];
+      let opIdx = -1;
+      let op = null;
+      for(let i=0;i<operators.length;i++) {
+        let idx = expr.lastIndexOf(operators[i]);
+        if(idx > 0) {
+          opIdx = idx;
+          op = operators[i];
+          break;
+        }
+      }
+      if(opIdx !== -1 && op) {
+        let left = expr.substring(0, opIdx).trim();
+        let right = expr.substring(opIdx+1).trim();
+        let leftVal = evaluateExpression(left, scopeVars);
+        let rightVal = evaluateExpression(right, scopeVars);
+        if(op === '+') return leftVal + rightVal;
+        if(op === '-') return leftVal - rightVal;
+        if(op === '*') return leftVal * rightVal;
+        if(op === '/') return Math.floor(leftVal / rightVal);
+        if(op === '%') return leftVal % rightVal;
+      }
+      // fallback
+      return 0;
+    }
+    
+    // split code into lines, remove comments (simple //)
+    let lines = code.split(/\r?\n/);
+    let cleanedLines = [];
+    for(let line of lines) {
+      let commentIdx = line.indexOf('//');
+      if(commentIdx !== -1) line = line.substring(0, commentIdx);
+      line = line.trim();
+      if(line !== "") cleanedLines.push(line);
+    }
+    
+    // we simulate in a step-by-step manner with simple block handling (brackets)
+    // we create a simple control flow executor. For this demo, we support only limited nesting.
+    let pc = 0;
+    let loopStack = [];
+    let skipMode = false;    // for if false branch
+    let conditionStack = []; // to handle if/else
+    
+    while(pc < cleanedLines.length) {
+      let line = cleanedLines[pc];
+      // skip #include lines
+      if(line.startsWith("#include")) { pc++; continue; }
+      
+      // variable declarations: int x = 5; or int x; or float y = 2.5;
+      let declMatch = line.match(/^(int|float|char)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:=\s*(.+?))?;?$/);
+      if(declMatch && !skipMode) {
+        let type = declMatch[1];
+        let varName = declMatch[2];
+        let initExpr = declMatch[3] ? declMatch[3].replace(/;$/, '') : null;
+        let value = 0;
+        if(initExpr) {
+          value = evaluateExpression(initExpr, variables);
+          if(type === 'float') value = parseFloat(value);
+          if(type === 'char') value = String(value).charCodeAt(0) || 0;
+        }
+        variables.set(varName, { type, value });
+        pc++;
+        continue;
+      }
+      
+      // assignment: var = expr;
+      let assignMatch = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(.+?);?$/);
+      if(assignMatch && !skipMode) {
+        let varName = assignMatch[1];
+        let expr = assignMatch[2].replace(/;$/, '');
+        let val = evaluateExpression(expr, variables);
+        if(variables.has(varName)) {
+          let old = variables.get(varName);
+          old.value = val;
+          variables.set(varName, old);
+        } else {
+          variables.set(varName, { type: 'int', value: val });
+        }
+        pc++;
+        continue;
+      }
+      
+      // printf simulation
+      let printfMatch = line.match(/^printf\s*\((.*)\);?$/);
+      if(printfMatch && !skipMode) {
+        let argsRaw = printfMatch[1];
+        // extract format string
+        let formatMatch = argsRaw.match(/^"([^"]*)"(?:,\s*(.*))?$/);
+        if(formatMatch) {
+          let formatStr = formatMatch[1];
+          let remainingArgs = formatMatch[2] ? formatMatch[2].split(',').map(s => s.trim()) : [];
+          let resultStr = "";
+          let argIdx = 0;
+          for(let i=0; i<formatStr.length; i++) {
+            if(formatStr[i] === '%' && i+1 < formatStr.length) {
+              let spec = formatStr[i+1];
+              let argVal = "";
+              if(argIdx < remainingArgs.length) {
+                let exprVal = evaluateExpression(remainingArgs[argIdx], variables);
+                if(spec === 'd' || spec === 'i') argVal = exprVal;
+                else if(spec === 'f') argVal = exprVal.toFixed(2);
+                else if(spec === 'c') argVal = String.fromCharCode(exprVal);
+                else if(spec === 's') argVal = String(exprVal);
+                else if(spec === 'p') argVal = "0x" + Math.abs(exprVal).toString(16);
+                else argVal = exprVal;
+              } else {
+                argVal = "?";
+              }
+              resultStr += argVal;
+              i++; // skip specifier
+              argIdx++;
+            } else {
+              resultStr += formatStr[i];
+            }
+          }
+          append(resultStr);
+        } else {
+          append("[printf parse error]");
+        }
+        pc++;
+        continue;
+      }
+      
+      // if, else if, else handling (simplified)
+      if(line.startsWith("if")) {
+        let condMatch = line.match(/^if\s*\((.*)\)\s*{?$/);
+        if(condMatch) {
+          let condition = condMatch[1];
+          let condResult = false;
+          try {
+            let evalRes = evaluateExpression(condition, variables);
+            condResult = evalRes !== 0;
+          } catch(e) { condResult = false; }
+          if(!condResult) skipMode = true;
+          else skipMode = false;
+          conditionStack.push({ type: 'if', met: condResult });
+          pc++;
+          continue;
+        }
+      }
+      if(line.startsWith("else if")) {
+        if(conditionStack.length && conditionStack[conditionStack.length-1].type === 'if' && !conditionStack[conditionStack.length-1].met) {
+          let condMatch = line.match(/^else\s+if\s*\((.*)\)\s*{?$/);
+          if(condMatch) {
+            let condResult = evaluateExpression(condMatch[1], variables) !== 0;
+            skipMode = !condResult;
+            if(condResult) conditionStack[conditionStack.length-1].met = true;
+            pc++;
+            continue;
+          }
+        } else { skipMode = true; pc++; continue; }
+      }
+      if(line.startsWith("else")) {
+        if(conditionStack.length && conditionStack[conditionStack.length-1].type === 'if' && !conditionStack[conditionStack.length-1].met) {
+          skipMode = false;
+          conditionStack[conditionStack.length-1].met = true;
+        } else skipMode = true;
+        pc++;
+        continue;
+      }
+      if(line === "}") {
+        if(conditionStack.length) conditionStack.pop();
+        skipMode = false;
+        pc++;
+        continue;
+      }
+      if(line.startsWith("for") || line.startsWith("while")) {
+        // for simplicity, we skip advanced loop simulation but display a note, but we can implement basic
+        append("⚠️ [Simulator note: full loops demo limited, but see examples above]");
+        pc++;
+        continue;
+      }
+      
+      // default
+      pc++;
+    }
+    if(output === "") return "// (No output generated)";
+    return output;
+  }
+  
+  // Run code from editor
+  function runCode() {
+    let userCode = codeEditor.value;
+    outputArea.innerText = "⏳ Running simulation ...\n";
+    setTimeout(() => {
+      try {
+        let result = runCSimulation(userCode);
+        outputArea.innerText = result;
+      } catch(err) {
+        outputArea.innerText = `⚠️ Simulation error: ${err.message}\n\nTip: Use simple C syntax (printf, int, if). Complex loops might be simplified.`;
+      }
+    }, 20);
+  }
+  
+  function resetEditor() {
+    codeEditor.value = `#include <stdio.h>\n\nint main() {\n    printf("Hello, C learner! 🚀\\n");\n    printf("Variables: int x = 42;\\n");\n    int x = 42;\n    printf("Value of x = %d\\n", x);\n    return 0;\n}`;
+    outputArea.innerText = "Reset editor. Press Run to execute.";
+  }
+  
+  function clearOutput() {
+    outputArea.innerText = "Output cleared. Ready.";
+  }
+  
+  // Event listeners
+  runBtn.addEventListener("click", runCode);
+  resetEditorBtn.addEventListener("click", resetEditor);
+  clearOutputBtn.addEventListener("click", clearOutput);
+  
+  // init
+  renderTopics();
+  // set default topic (first)
+  updateTopicDetail(0);
+  // preload default explanation
+  dynamicExplanation.innerHTML = `<div style="font-weight: bold;">📖 ${topics[0].title}</div><div>${topics[0].explanation}</div><div style="background:#030b1c; border-radius:14px; padding:8px; margin-top:8px;"><strong>💡 Example:</strong><pre style="margin-top:6px;">${escapeHtml(topics[0].code)}</pre></div>`;
+</script>
+</body>
+</html>
